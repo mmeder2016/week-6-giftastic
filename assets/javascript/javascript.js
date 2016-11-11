@@ -44,7 +44,7 @@ $(document).ready(function() {
         console.log(".dynamic-buttons clicked " + subtype);
         // Add giffy code here
         var p = $(this).data('subtype');
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + p + "&api_key=dc6zaTOxFJmzC&limit=10";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + p + "&api_key=dc6zaTOxFJmzC&limit=10";
 
         $.ajax({ url: queryURL, method: 'GET'}).done(function(response) {
             returnedGifs = response.data;

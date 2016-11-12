@@ -50,15 +50,17 @@ footer {
 	text-align: left;
 	background-color: LightSteelBlue;
 	font-weight: bold;
+	margin-top:.2em;
 }
 /*In div-right-form*/
 .p-add-animal {
 	margin: 0;
 }
-#textbox-animal, #button-add-animal {
+#textbox-animal, #button-add-animal{
 	margin: .2em 0;
-	width:60%;
+	width:8em;
 }
+
 .item {
 	
 }

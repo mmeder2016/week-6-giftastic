@@ -1,16 +1,13 @@
 $(document).ready(function() {
 
-    // Initialize an array of strings related to a theme
+    // Initialize an array of strings (topics) related to a theme
     var theme = "animal";
     var topics = ["woodchuck", "heron", "snapping turtle", "raccoon", "opposom", "elk", "moose", "cougar", "squirrel"];
+    // An array to hold the gifs returned from giphy
     var returnedGifs;
-    init();
 
-    // $("*").on("click", function() {
-    //     // Get the subtype from the textbox
-    //     var subtype = $('#textbox-animal').val().trim();
-    //     return false;
-    // });
+    // Initialize page with buttons from the topics array
+    init();
 
     function init() {
         // Set the them and the subtypes
@@ -18,20 +15,20 @@ $(document).ready(function() {
         renderButtons();
     }
 
-    // Creates and appends new button in the ".div-buttons" div
+    // Creates and appends new buttons in the ".div-buttons" div from the topics array
     function renderButtons(subtype) {
         $('.div-buttons').empty();
         for (var topic of topics) {
             var newButton = $('<button>');
             newButton.attr('data-subtype', topic);
             newButton.addClass('dynamic-buttons btn btn-primary');
-            // newButton.addClass('btn btn-primary"');
             newButton.append(topic);
-            // Make the button visible
+            // Make the button visible in the div
             $('.div-buttons').append(newButton);
         }
     }
 
+    // Handles th button for the user to add a new button to the topics
     $("#button-add-animal").on("click", function() {
         // Get the subtype from the textbox
         var subtype = $('#textbox-animal').val().trim();
@@ -40,22 +37,29 @@ $(document).ready(function() {
         }
         // Reset the text in the text input to empty
         $("#textbox-animal").val("");
+        // Make buttons from the data in the topics array
         renderButtons();
         // Do not refresh page
         return false;
     });
 
+    // When the user clicks on one of the topics buttons, get the gifs and 
+    // append them to the .div-left-gifs div
     $(document).on("click", ".dynamic-buttons", function() {
         // Clear the div of previous gifs
         $('.div-left-gifs').empty();
 
+        // Get the name of the animal from the attribute subtype
         var subtype = ($(this).data('subtype'));
         console.log(".dynamic-buttons clicked " + subtype);
-        // Add giffy code here
-        var p = $(this).data('subtype');
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + p + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-        $.ajax({ url: queryURL, method: 'GET' }).done(function(response) {
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + subtype + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+        // Get the gifs and append them to the .div-left-gifs div
+        $.ajax({
+            url: queryURL,
+            method: 'GET'
+        }).done(function(response) {
             returnedGifs = response.data;
             console.log(response);
             console.log(returnedGifs);
@@ -72,24 +76,27 @@ $(document).ready(function() {
                 animalImage.attr('idx', i);
                 // 0 - not animated 1 - animated
                 animalImage.attr('animated', false);
+                animalImage.attr('float', 'left');
 
                 gifDiv.append(p);
                 gifDiv.append(animalImage);
 
-                $('.div-left-gifs').prepend(gifDiv);
+                $('.div-left-gifs').append(gifDiv);
             }
         });
 
         return false;
     });
 
-
+    // When the user clicks on the still gif, animate it, or, if it is already, 
+    // animated, stop the animation
     $(".div-left-gifs").on("click", "img", function() {
         var index = $(this).attr('idx');
+        // an - animated
         var an = $(this).attr('animated');
         console.log(typeof(an));
 
-        // 0 - not animated 1 - animated
+        // false - not animated true - animated
         if (an === 'false') {
             $(this).attr('src', returnedGifs[index].images.fixed_height.url);
             $(this).attr('animated', true);
